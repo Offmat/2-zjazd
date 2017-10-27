@@ -1,0 +1,13 @@
+testing
+no to druga linijka
+no to druga linijka
+a jak użyję << zamiast puts?a jak użyję << zamiast puts?a jak użyję << zamiast puts?a jak użyję << zamiast puts?no to już wiem, że << potrzebuje /n, a puts zrobi to samno to już wiem, że << potrzebuje /n, a puts zrobi to samno to już wiem, że << potrzebuje /n, a puts zrobi to sam
+no to już wiem, że << potrzebuje /n, a puts zrobi to sam
+no to już wiem, że << potrzebuje /n, a puts zrobi to sam
+no to już wiem, że << potrzebuje /n, a puts zrobi to sam
+no to już wiem, że << potrzebuje /n, a puts zrobi to sam
+no to już wiem, że << potrzebuje /n, a puts zrobi to sam
+no to już wiem, że << potrzebuje 
+, a puts zrobi to sam
+muszę zapamiętać, że to ma być backslash /
+muszę zapamiętać, że to ma być backslash \n
