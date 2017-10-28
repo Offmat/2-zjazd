@@ -18,14 +18,22 @@ require "digest"
 # ./hasher.rb filename [hash]”
 
 
-if ARGV.length == 1
-  puts Digest::MD5.file(ARGV[0]).hexdigest
-elsif ARGV.length == 2
-  if (Digest::MD5.file(ARGV[0]).hexdigest) == ARGV[1]
-    puts "Given hash is same with the file"
-  else
-    puts "Given hash is different from the file"
-  end
-else
-  puts "“Usage: ./hasher.rb filename [hash]”"
+# if ARGV.length == 1
+#   puts Digest::MD5.file(ARGV[0]).hexdigest
+# elsif ARGV.length == 2
+#   if (Digest::MD5.file(ARGV[0]).hexdigest) == ARGV[1]
+#     puts "Given hash is same with the file"
+#   else
+#     puts "Given hash is different from the file"
+#   end
+# else
+#   puts "“Usage: ./hasher.rb filename [hash]”"
+# end
+
+def hash_md5
+  Digest::MD5.file(ARGV[0]).hexdigest
+rescue
+  "Couldn't calculate hash for file: #{ARGV[0]}"
 end
+
+puts hash_md5
