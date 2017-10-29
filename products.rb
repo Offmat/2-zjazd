@@ -34,11 +34,15 @@ class Warehouse
   end
 
   def print(product)
-    puts product[0] + " " + product[1].to_s
+    puts product[0].ljust(13, ".") + " " + product[1].to_s
   end
 
   def add(object)
-    @products.push(object)
+    if object.header_row?
+      @headers = object
+    else
+      @products.push(object)
+    end
   end
 
   def find(name)
@@ -59,11 +63,13 @@ class Warehouse
     end
   end
 
-  def convert(rate, file_name)
+  def convert(rate, curr, file_name)
+    @headers[1] = "Price(#{curr})"
     @products.each do |product|
       product[1] = (product[1] / rate).round(2)
     end
     CSV.open(file_name, "w") do |csv|
+      csv << @headers
       @products.each do |product|
         csv << product
       end
@@ -78,13 +84,13 @@ def menu(collection)
   collection.find(ARGV[1]) if ARGV[0] == "-f"
   collection.greater(ARGV[1].to_f) if ARGV[0] == "-gt"
   collection.lesser(ARGV[1].to_f) if ARGV[0] == "-lt"
-  collection.convert(ARGV[1].to_f, ARGV[3]) if ARGV[0] == "-c"
+  collection.convert(ARGV[1].to_f, ARGV[2], ARGV[3]) if ARGV[0] == "-c"
 end
 
 
 
 warehouse = Warehouse.new
-CSV.foreach("products.csv", converters: :float, headers: true,) do |r|
+CSV.foreach("products.csv", converters: :float, headers: true, return_headers: true) do |r|
   warehouse.add(r)
 end
 # binding.pry
