@@ -33,7 +33,7 @@ class SievieOfEratostenes
       delete_mult(n)
       n += 1
     end
-    puts "There is #{@array.length} prime numbers:"
+    puts "There are #{@array.length} prime numbers:"
     puts @array
   end
 end
