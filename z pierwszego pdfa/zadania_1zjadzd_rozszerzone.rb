@@ -40,19 +40,19 @@ require "pry"
 
 
 #czytanie z plików
-
-# contents = File.read("/etc/hosts")
+#
+# contents = File.read("/home/mateusz/code sensei/kurs stacjonarny/zadania_2/z pierwszego pdfa/testowy.txt")
 # puts contents
 #
-# def longest_line(file_name)
-#   file = File.open(file_name)
-#   longest = ""
-#   file.each do |line|
-#     longest = line if line.length > longest.length
-#   end
-#   file.close
-#   longest
-# end
+def longest_line(file_name)
+  file = File.open(file_name)
+  longest = ""
+  file.each do |line|
+    longest = line if line.length > longest.length
+  end
+  file.close
+  longest
+end
 
 
 # "./code\ sensei/kurs\ stacjonarny/zadania_2/testowy.txt"
@@ -61,7 +61,7 @@ require "pry"
 #czemu to nie działa z pliku a z terminala działa? jak się odwoływać do adresów bezwzględnych z pliku? zwłaszcza, że do hosts działa też od "/" i adres.
 
 
-# puts longest_line("/etc/hosts")
+puts longest_line("/home/mateusz/code sensei/kurs stacjonarny/zadania_2/testowy.txt")
 # puts longest_line("testowy.txt")  #na szczęście są jeszcze adresy względne
 #
 # data = File.open("testowy.txt") { |f| f.map { |line| line.reverse } } #skąd tu się wzięły dodatkowe /n przed każdą linią?!
