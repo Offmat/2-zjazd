@@ -5,17 +5,18 @@
 require "pry"
 
 class BubbleSort
+  attr_accessor :array
   def initialize
     @array = ARGV.map { |e| e.to_i }
-    puts "Nie zadano tablicy to segregacji!" if @array.length == 0
+    puts "Nie zadano tablicy to segregacji!" if array.length == 0
     @counter = 0
     sort
   end
 
 
   def check_switch(n)
-    if @array[n] > @array[n+1]
-      @array[n], @array[n+1] = @array[n+1], @array[n]
+    if array[n] > array[n+1]
+      array[n], array[n+1] = array[n+1], array[n]
       @flag = true
     end
     @counter +=1
@@ -23,13 +24,13 @@ class BubbleSort
 
 
   def sort
-    (2..@array.length).each do |e|
+    (2..array.length).each do |e|
       @flag = false
-      binding.pry
-      (0..@array.length-e).each {|n| check_switch(n)}
+      # binding.pry
+      (0..array.length-e).each {|n| check_switch(n)}
       break if @flag == false
     end
-    puts @array.inspect
+    puts array.inspect
     puts @counter
   end
 
