@@ -33,54 +33,45 @@ class Warehouse
     @products = []
   end
 
-  def add(name, price, weight)
-    @products.push(Product.new(name, price, weight))
+  def print(product)
+    puts product[0] + " " + product[1].to_s
+  end
+
+  def add(object)
+    @products.push(object)
   end
 
   def find(name)
     @products.each do |product|
-      puts product if product.name == name
+      print(product) if product[0] == name
     end
   end
 
   def greater(price)
     @products.each do |product|
-      puts product if product.price > price
+      print(product) if product[1] > price
     end
   end
 
   def lesser(price)
     @products.each do |product|
-      puts product if product.price < price
+      print(product) if product[1] < price
     end
   end
 
   def convert(rate, file_name)
     @products.each do |product|
-      product.price = (product.price / rate).round(2)
+      product[1] = (product[1] / rate).round(2)
     end
-    CSV.open(file_name, "wb") do |csv|
+    CSV.open(file_name, "w") do |csv|
       @products.each do |product|
-        csv << [product.name, product.price, product.weight]
+        csv << product
       end
     end
   end
 
 end
 
-class Product
-  attr_reader :name, :price, :weight
-  attr_writer :price
-  def initialize(name, price, weight)
-    @name = name
-    @price = price.to_f
-    @weight = weight.to_f
-  end
-
-  def to_s
-    name + " " + price.to_s
-  end
-end
 
 
 def menu(collection)
@@ -93,8 +84,8 @@ end
 
 
 warehouse = Warehouse.new
-CSV.foreach("products.csv") do |r|
-  warehouse.add(r[0], r[1], r[2])    #czy to jest jakiś problem, że jako pierwszy produkt stworzyłem produkt z nagłówkami? Powinienem wyrzucić jakos ten obiekt z tablicy?
+CSV.foreach("products.csv", converters: :float, headers: true,) do |r|
+  warehouse.add(r)
 end
 # binding.pry
 menu(warehouse)
