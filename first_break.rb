@@ -35,15 +35,15 @@ require "pry"
 
 # def middle(string)
 #   if string.length%2 == 0
-#     puts string[string.length/2-1, 2]
+#     string[string.length/2-1, 2]
 #   else
-#     puts string[string.length/2]
-#     end
+#     string[string.length/2]
+#   end
 # end
 #
-# middle("abc") #=> "b"
-# middle("middle") #=> "dd"
-# middle("tesTing") #=> "T"
+# puts middle("abc") #=> "b"
+# puts middle("middle") #=> "dd"
+# puts middle("tesTing") #=> "T"
 
 # ---------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ require "pry"
 # elementów poza wartością najwyższą i najniższą.
 
 # def sum_array(array)
-#   array.inject(:+) - array.min - array.max
+#   array.sum - array.min - array.max
 # end
 #
 #
@@ -101,9 +101,7 @@ require "pry"
 # end
 
 # def invert_array(array)
-#   new_array = []
-#   array.each {|e| new_array << -e}
-#   new_array
+#   array.map {|e| -e }
 # end
 #
 # print invert_array([1, 2, 3, 4, 5]) #=> [-1, -2, -3, -4, -5]
@@ -144,16 +142,9 @@ require "pry"
 # def avg_array(*arrays)
 #   new_array = Array.new(arrays[0].length, 0)
 #   arrays.each  do |array|
-#     array.each.with_index {|e, i| new_array[i] += e }
-#     # binding.pry
+#     array.each.with_index {|e, i| new_array[i] += e}
 #   end
-#   new_array.map do |e|
-#     if e%arrays.length == 0
-#       e/arrays.length
-#     else
-#       e/(arrays.length.to_f)
-#     end
-#   end
+#   new_array.map {|e| e/(arrays.length.to_f)}
 # end
 #
 # print avg_array([1, 3, 5], [3, 5, 7]) #=> [2, 4, 6]
@@ -168,12 +159,7 @@ require "pry"
 
 # def highest_number(number)
 #   arr = number.to_s.split('').map {|e| e.to_i}
-#   highest = []
-#   arr.length.times do
-#     highest << arr.max
-#     arr.delete_at(arr.index(arr.max))
-#   end
-#   highest.join.to_i
+#   arr.sort!.reverse!.join.to_i
 # end
 #
 # puts highest_number(132) #=> 321
@@ -186,13 +172,8 @@ require "pry"
 # przedziale od 0 do n, które są podzielne przez 3 lub 5 i zwróci sumę tych liczb.
 
 # def multiples(n)
-#   # binding.pry
 #   (1..n).sum do |e|
-#     if (e%3 != 0 && e%5 != 0)
-#       e = 0
-#     else
-#       e
-#     end
+#     e%3 != 0 && e%5 != 0 ? 0 : e
 #   end
 # end
 #
@@ -233,9 +214,7 @@ require "pry"
 
 # def hamming_distance(string1, string2)
 #   return nil if string1.length != string2.length
-#   ham = 0
-#   (0...string1.length).each { |i| ham += 1 if string1[i]  != string2[i] }
-#   ham
+#   (0...string1.length).sum {|i| string1[i]  != string2[i] ? 1 : 0}
 # end
 #
 #
@@ -252,9 +231,14 @@ require "pry"
 
 # def pangram?(string)
 #   signs = []
-#   string.split('').each {|s| signs << s.downcase if !signs.include?(s.downcase) && /[[:alpha:]]/.match(s) }
+#   string.downcase.split('').each {|s| signs << s if !signs.include?(s) && /[[:alpha:]]/.match(s) }
 #   print signs
 #   signs.length == 32
+# end
+
+# def pangram?(string)
+#   array = string.downcase.split('').uniq.map { |s| !/[[:alpha:]]/.match(s) ? nil : s}
+#   array.compact.length == 32
 # end
 #
 # puts pangram?('Dość błazeństw, żrą mój pęk luźnych fig') #=> true
@@ -272,7 +256,6 @@ require "pry"
 #     roman.insert(-2, ones) if ar == 4
 #     (ar-5).times {roman << ones} if (6..8).include?(ar)
 #     (ar).times {roman << ones} if ar < 4
-#     roman
 # end
 #
 #
@@ -290,5 +273,66 @@ require "pry"
 # puts to_roman(37) #=> 'XXXVII'
 # puts to_roman(924) #=> 'CMXXIV'
 # puts to_roman(3888) #=> 'MMMDCCCLXXXVIII'
+
+# ---------------------------------------------------------------------------
+
+# Napisz program, który policzy ilość wystąpień poszczególnych słów w zadanym jako
+# argument stringu.
+# Zignoruj wielkość liter.
+
+# def word_count(string)
+#   hash = Hash.new
+#   string.downcase.split.each {|e| hash.key?(e) ? hash[e] += 1 : hash[e] = 1}
+#   hash
+# end
+#
+# puts word_count('foo Foo bar bar Bar') #=> { "foo" => 2, "bar" => 3 }
+# puts word_count('Losowy ciąg znaków ciąg') #=> { "losowy" => 1, "ciąg" => 2, "znaków" => 1}
+
+# ---------------------------------------------------------------------------
+
+# Rok jest przestępny jeśli:
+# - jest podzielny przez 4, ale niepodzielny przez 100, lub
+# - jest podzielny przez 400
+# Napisz funkcję, która sprawdza czy rok jest przestępny.
+
+# def leap_year?(year)
+#   year%400==0 || (year%4==0 && year%100!=0) ? true : false
+# end
+#
+# puts leap_year?(2004) #=> true
+# puts leap_year?(2000) #=> true
+# puts leap_year?(2100) #=> false
+
+# ---------------------------------------------------------------------------
+
+# Wykorzystując funkcję leap_year? z zadania ‘Rok przestępny’ napisz funkcję ‘leap_years’,
+# która otrzymuje tablicę liczb całkowitych, każda liczba reprezentuje rok i zwraca tablicę
+# tylko z liczbami reprezentującymi rok przestępny.
+
+# def leap_years(years)
+#   years.map! {|y| leap_year?(y) ? y : nil}
+#   years.compact
+# end
+#
+# print leap_years([2011, 2012, 2015, 2016, 2018]) #=> [2012, 2016]
+# puts
+# print leap_years((2000..2100).to_a) #=> [2000, 2004, 2008, 2012, 2016, 2020, 2024, 2028
+# puts
+
+# ---------------------------------------------------------------------------
+
+# Palindrom – wyrażenie brzmiące tak samo czytane od lewej do prawej i od prawej do
+# lewej. Przykładem palindromu jest: “Kobyła ma mały bok”.
+# Napisz funkcję palindrome? , która otrzymuje ciąg znaków i zwraca wartość logiczną
+# ( true / false ) w zależnośći czy dany ciąg jest palindromem.
+
+def palindrome?(string)
+  string.downcase.split.join == string.reverse.downcase.split.join #tak chyba i tak krócej niż z gsubem
+end
+
+puts palindrome?('Kobyła ma mały bok') #=> true
+puts palindrome?('kajak') #=> true
+puts palindrome?('kajak i wiosło') #=> false
 
 # ---------------------------------------------------------------------------

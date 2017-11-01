@@ -1,5 +1,5 @@
 # require "csv"
-# require "pry"
+require "pry"
 #
 # CSV.foreach("products.csv", converters: :float, headers: true, return_headers: true) do |r|
 #   puts r
@@ -10,4 +10,17 @@
 # end
 
 
-puts "%020s" % "ble"
+# puts "%020s" % "ble"
+
+
+class Cat
+
+  def meow
+    puts "Meow"
+    puts "2"
+  end
+
+end
+
+binding.pry
+Cat.new.meow
