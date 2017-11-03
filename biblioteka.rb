@@ -24,7 +24,17 @@ class Library
     @users = []
   end
 
-  def add_book(book)
+  def add_book
+    print 'Name of the book: '
+    name = gets.chomp
+    print 'Author of the book: '
+    author = gets.chomp
+    print 'Kind of the book: '
+    kind = gets.chomp
+    @books << Book.new(name, author, kind)
+  end
+
+  def add_book_source(book)
     @books << book
   end
 
@@ -50,20 +60,19 @@ end
 
 # ksiazka
 class Book
-  def initialize(name, author)
+  def initialize(name, author, kind)
     @name = name
     @author = author
+    @kind = kind
     @log = []
     @avalible = true
   end
 
   def to_s
-    string << "Title: #{name}".ljust(35) + "Author: #{author}".ljust(25)
-    string << if @avalible == true
-                'Avalible'
-              else
-                'Not avalible'
-              end
+    string = ''
+    string << "Title: #{@name}".ljust(35) + "Author: #{@author}".ljust(25) + "Kind: #{@kind}".ljust(25)
+    # binding.pry
+    string << (@avalible == true ? 'Avalible' : 'Not avalible')
   end
 
   def sign_loaned
@@ -75,55 +84,14 @@ class Book
   end
 end
 
-# library.add_book(Book.new"Metro 2033", "D.Glukhowski", "Fantasy")
-#
-# book=Book.new
-# book.series_on
-# book.series_name="Metro"
-# book.volume="2"
-# book.name="Metro 2034"
-# book.author="D.Glukhowski"
-# book.rate=7.5
-# book.kind="Fantasy"
-# book.comment="no comment"
-# bookshelf.books<<book
-#
-# book=Book.new
-# book.name="Wyprawa czarownic"
-# book.author="T.Pratchett"
-# book.rate="??"
-# book.kind="Fantasy"
-# book.comment="no comment"
-# bookshelf.books<<book
-#
-# book=Book.new
-# book.name="Komórka"
-# book.author="S.King"
-# book.rate=7.2
-# book.kind="Fantasy"
-# book.comment="no comment"
-# bookshelf.books<<book
-#
-# book=Book.new
-# book.name="Cztery pory roku"
-# book.author="S.King"
-# book.rate=8.2
-# book.kind="Fantasy"
-# book.comment="no comment"
-# bookshelf.books<<book
-#
-# book=Book.new
-# book.name="Zgroza w Dunwich"
-# book.author="H.P.Lovecraft"
-# book.rate=8.4
-# book.kind="Horror"
-# book.comment="no comment"
-# bookshelf.books<<book
-#
-# book=Book.new
-# book.name="Dzienniki gwiazdowe"
-# book.author="S.Lem"
-# book.rate=8.6
-# book.kind="Science fiction"
-# book.comment="no comment"
-# bookshelf.books<<book
+library = Library.new
+library.add_book_source(Book.new("Metro 2033", "D.Glukhowski", "Fantasy"))
+library.add_book_source(Book.new("Metro 2034", "D.Glukhowski", "Fantasy"))
+library.add_book_source(Book.new("Wyprawa czarownic", "T.Pratchett", "Fantasy"))
+library.add_book_source(Book.new("Komórka", "S.King", "Fantasy"))
+library.add_book_source(Book.new("Cztery pory roku", "S.King", "Fantasy"))
+library.add_book_source(Book.new("Zgroza w Dunwich", "H.P.Lovecraft", "Horror"))
+library.add_book_source(Book.new("Dzienniki gwiazdowe", "S.Lem", "Science fiction"))
+library.add_book_source(Book.new("Teoria kwantowa nie gryzie", "M.Chown", "Popular science"))
+library.add_book_source(Book.new("Krótka historia czasu", "S.Hawking", "Popular science"))
+library.print_books
