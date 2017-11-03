@@ -51,7 +51,7 @@ require "pry"
 # sekwencję komplementarną. Adenina (A) z Tyminą (T), a Cytozyna © z Guaniną
 
 # def complementary_DNA(string)
-#   string.gsub(/[ATCG]/, 'A' => 'T', 'T' => 'A', 'C' => 'G', 'G' => 'C')
+#   string.tr("ATCG", "TAGC")
 # end
 #
 # puts complementary_DNA("ATTA") #=> "TAAT"
@@ -327,12 +327,12 @@ require "pry"
 # Napisz funkcję palindrome? , która otrzymuje ciąg znaków i zwraca wartość logiczną
 # ( true / false ) w zależnośći czy dany ciąg jest palindromem.
 
-def palindrome?(string)
-  string.downcase.split.join == string.reverse.downcase.split.join #tak chyba i tak krócej niż z gsubem
-end
-
-puts palindrome?('Kobyła ma mały bok') #=> true
-puts palindrome?('kajak') #=> true
-puts palindrome?('kajak i wiosło') #=> false
+# def palindrome?(string)
+#   string.downcase.split.join == string.reverse.downcase.split.join #tak chyba i tak krócej niż z gsubem
+# end
+#
+# puts palindrome?('Kobyła ma mały bok') #=> true
+# puts palindrome?('kajak') #=> true
+# puts palindrome?('kajak i wiosło') #=> false
 
 # ---------------------------------------------------------------------------
