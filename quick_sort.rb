@@ -59,22 +59,27 @@ end
 # nowy sort - miał być szybszy;]
 
 def switch(j, i, array)
-  array.insert(j, array.delete_at(i))
+  array[i], array[j] = array[j], array[i]
+  # array.insert(j, array.delete_at(i))
 end
 
-# def move_under(place, i, c, array)
-#   array.insert(place, array.delete_at(i))
-#   c + 1
-# end
-#
-# def move_above(place, i, c, array)
-#   array.insert(place, array.delete_at(i))
-#   c - 1
-# end
+def move_under(place, i, c, array)
+  array[i], array[place] = array[place], array[i]
+  # array.insert(place, array.delete_at(i))
+  c + 1
+end
+
+def move_above(place, i, c, array)
+  array[i], array[place] = array[place], array[i]
+  # array.insert(place, array.delete_at(i))
+  c - 1
+end
 
 def sort_new(array, b = 0, e = array.length-1)
   c = (e + b) / 2
   pivot = array[c]
+
+
   j = b
   switch(e, c, array)
   # binding.pry
