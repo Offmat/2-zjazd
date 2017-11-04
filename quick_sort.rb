@@ -7,11 +7,29 @@
 
 require 'pry'
 require 'benchmark'
-input_array = Array.new(100000) { rand(1000) }
+input_array = Array.new(100_000) { rand }
 
 # input_array = ARGV.map(&:to_i)
 input_array2 = input_array.dup
 input_array3 = input_array.dup
+
+
+def check_if_works
+  10.times do
+    ar = Array.new(1000) { rand }
+    print ar[0..15].inspect
+    puts '    <-   losowy'
+    print made_by_ruby = ar.sort[0..15].inspect
+    puts '    <-   rubiowy'
+    print made_by_my_sort = sort_new(ar)[0..15].inspect
+    puts '    <-   mój'
+    puts made_by_ruby == made_by_my_sort
+  end
+end
+
+
+
+
 
 # pierwszy sort jaki napisałem tydzień temu
 def sort(array)
@@ -38,23 +56,39 @@ end
 # moj sort     4.410000   0.040000   4.450000 (  4.442020)
 # wbudowany    0.840000   0.000000   0.840000 (  0.842860)
 
-
-
-
 # nowy sort - miał być szybszy;]
-def move_under(p, i, c, array)
-  array.insert(p, array.delete_at(i))
-  c + 1
+
+def switch(j, i, array)
+  array.insert(j, array.delete_at(i))
 end
 
-def move_above(p, i, c, array)
-  array.insert(p, array.delete_at(i))
-  c - 1
-end
+# def move_under(place, i, c, array)
+#   array.insert(place, array.delete_at(i))
+#   c + 1
+# end
+#
+# def move_above(place, i, c, array)
+#   array.insert(place, array.delete_at(i))
+#   c - 1
+# end
 
 def sort_new(array, b = 0, e = array.length-1)
   c = (e + b) / 2
   pivot = array[c]
+  j = b
+  switch(e, c, array)
+  # binding.pry
+  (b..e - 1).each do |i|
+    if array[i] <= pivot
+      switch(j, i, array)
+      j += 1
+    end
+  end
+  switch(j, e, array)
+  sort_new(array, b, j - 1) if j > b + 1
+  sort_new(array, j + 1, e) if j < e - 1
+  array
+
 
                     # (b..e).each do |i|
                     #   if array[i] < pivot && i > c
@@ -67,29 +101,23 @@ def sort_new(array, b = 0, e = array.length-1)
                     # sort_new(array, b, c - 1) if c > b + 1
                     # sort_new(array, c + 1, e) if c < e - 1
                     # array
-  i = b
-  (e - b + 1).times do
-    # binding.pry
-    if array[i] < pivot && i > c
-      c = move_under(b, i, c, array)
-    elsif array[i] > pivot && i < c
-      c = move_above(e, i, c, array)
-      next
-    end
-    i += 1
-  end
-  sort_new(array, b, c - 1) if c > b + 1
-  sort_new(array, c + 1, e) if c < e - 1
-  array
+                                              # i = b
+                                              # (e - b + 1).times do
+                                              #   # binding.pry
+                                              #   if array[i] < pivot && i > c
+                                              #     c = move_under(b, i, c, array)
+                                              #   elsif array[i] > pivot && i < c
+                                              #     c = move_above(e, i, c, array)
+                                              #     next
+                                              #   end
+                                              #   i += 1
+                                              # end
+                                              # sort_new(array, b, c - 1) if c > b + 1
+                                              # sort_new(array, c + 1, e) if c < e - 1
+                                              # array
 end
 
-#
-# puts pierwszy = sort(input_array)[0..10].inspect
-# puts new_array = sort_new(input_array2)[0..10].inspect
-# puts sorted = input_array3.sort[0..10].inspect
-#
-# puts new_array == sorted
-# puts pierwszy == sorted
+
 
 Benchmark.bmbm(10) do |x|
   x.report("mój sort") { sort(input_array) }
@@ -113,3 +141,8 @@ end
 # mój nowy sort  22.950000   0.010000  22.960000 ( 22.975217)
 # wbudowany       0.020000   0.000000   0.020000 (  0.020752)
 # --------------------------------------- total: 23.790000sec
+
+#                     user     system      total        real
+# mój sort        0.810000   0.010000   0.820000 (  0.815747)
+# mój nowy sort   0.170000   0.000000   0.170000 (  0.172187)
+# wbudowany       0.020000   0.000000   0.020000 (  0.019359)
