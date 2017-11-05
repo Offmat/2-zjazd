@@ -3,37 +3,16 @@
 # quick sort
 # $ ruby quick_sort.rb 74 77 64 19 43 47 77 66 47 60 7 97 71 87 95 79
 # 7 19 43 47 47 60 64 66 71 74 77 77 79 87 95 97
-# rubocop:enable Style/AsciiComments
 
 require 'pry'
 require 'benchmark'
-input_array = Array.new(100_000) { rand }
+input_array = Array.new(1_000_000) { rand }
 
-# input_array = ARGV.map(&:to_i)
-input_array2 = input_array.dup
-input_array3 = input_array.dup
-
-
-def check_if_works
-  10.times do
-    ar = Array.new(1000) { rand }
-    print ar[0..15].inspect
-    puts '    <-   losowy'
-    print made_by_ruby = ar.sort[0..15].inspect
-    puts '    <-   rubiowy'
-    print made_by_my_sort = sort_new(ar)[0..15].inspect
-    puts '    <-   mój'
-    puts made_by_ruby == made_by_my_sort
-  end
-end
-
-
-
-
+# input_array = ARGV.map(&:to_i) # to uruchomić żeby działało jak w zadaniu
 
 # pierwszy sort jaki napisałem tydzień temu
 def sort(array)
-  pattern = array.dup           # tu poczułem że samo przypisanie to kolejna nazwa dla tego samego obiektu:)
+  pattern = array.dup
   c = array.length / 2
   pivot = array.delete_at(c)    # inaczej nie będzie segregował dwuelementowej tablicy w której większy element jest pierwszy
   ar1 = []
@@ -52,34 +31,64 @@ def sort(array)
   ar1 + ar2
 end
 
-# czas dla 1 000 000 - po całym dniu pracy wzrósł mu do 52sekun!! mógł się tak komputer "zapchać" ?
-# moj sort     4.410000   0.040000   4.450000 (  4.442020)
-# wbudowany    0.840000   0.000000   0.840000 (  0.842860)
-
-# nowy sort - miał być szybszy;]
-
 def switch(j, i, array)
   array[i], array[j] = array[j], array[i]
-  # array.insert(j, array.delete_at(i))
 end
 
 def move_under(place, i, c, array)
-  array[i], array[place] = array[place], array[i]
-  # array.insert(place, array.delete_at(i))
+  array.insert(place, array.delete_at(i))
   c + 1
 end
 
 def move_above(place, i, c, array)
-  array[i], array[place] = array[place], array[i]
-  # array.insert(place, array.delete_at(i))
+  array.insert(place, array.delete_at(i))
   c - 1
 end
 
+# minusem eacha jest to, że element przerzucony z początku na koniec jest sprawdzany na końcu jeszcze raz. Tu nie zadziała zamiana - musi być upychanie
+def sort_new_with_each(array, b = 0, e = array.length-1)
+  c = (e + b) / 2
+  pivot = array[c]
+  (b..e).each do |i|
+    # binding.pry
+    if array[i] < pivot && i > c
+      c = move_under(b, i, c, array)
+    elsif array[i] > pivot && i < c
+      c = move_above(e, i, c, array)
+      redo
+    end
+  end
+  sort_new(array, b, c - 1) if c > b + 1
+  sort_new(array, c + 1, e) if c < e - 1
+  array
+end
+# a = [1, 8, 7, 6, 5]
+# sort_new_with_each(a)
+
+#problem z podwójnym sprawdzaniem załatwiony -> ilość sprawdzeń = ilość elementów. Tu nie zadziała zamiana - musi być upychanie
+def sort_new_with_times(array, b = 0, e = array.length-1)
+  c = (e + b) / 2
+  pivot = array[c]
+  i = b
+  (e - b + 1).times do
+    # binding.pry
+    if array[i] < pivot && i > c
+      c = move_under(b, i, c, array)
+    elsif array[i] > pivot && i < c
+      c = move_above(e, i, c, array)
+      next
+    end
+    i += 1
+  end
+  sort_new(array, b, c - 1) if c > b + 1
+  sort_new(array, c + 1, e) if c < e - 1
+  array
+end
+
+# w końcu się poddałem i podejrzałem w internetach - stąd przesuwanie j i przerzucanie pivota na koniec
 def sort_new(array, b = 0, e = array.length-1)
   c = (e + b) / 2
   pivot = array[c]
-
-
   j = b
   switch(e, c, array)
   # binding.pry
@@ -93,61 +102,61 @@ def sort_new(array, b = 0, e = array.length-1)
   sort_new(array, b, j - 1) if j > b + 1
   sort_new(array, j + 1, e) if j < e - 1
   array
-
-
-                    # (b..e).each do |i|
-                    #   if array[i] < pivot && i > c
-                    #     c = move_under(b, i, c, array)
-                    #   elsif array[i] > pivot && i < c
-                    #     c = move_above(e, i, c, array)
-                    #     redo
-                    #   end
-                    # end
-                    # sort_new(array, b, c - 1) if c > b + 1
-                    # sort_new(array, c + 1, e) if c < e - 1
-                    # array
-                                              # i = b
-                                              # (e - b + 1).times do
-                                              #   # binding.pry
-                                              #   if array[i] < pivot && i > c
-                                              #     c = move_under(b, i, c, array)
-                                              #   elsif array[i] > pivot && i < c
-                                              #     c = move_above(e, i, c, array)
-                                              #     next
-                                              #   end
-                                              #   i += 1
-                                              # end
-                                              # sort_new(array, b, c - 1) if c > b + 1
-                                              # sort_new(array, c + 1, e) if c < e - 1
-                                              # array
 end
 
-
-
-Benchmark.bmbm(10) do |x|
-  x.report("mój sort") { sort(input_array) }
-  x.report("mój nowy sort") { sort_new(input_array2) }
-  x.report("wbudowany") { input_array3.sort }
+# sprawdza czy sortowanie dobrze działa z małym podglądem
+def check_if_works
+  100.times do
+    ar = Array.new(1000) { rand }
+    print ar[0..15].inspect
+    puts '    <-   losowy'
+    print made_by_ruby = ar.sort[0..15].inspect
+    puts '    <-   rubiowy'
+    print made_by_my_sort = sort_new(ar)[0..15].inspect
+    puts '    <-   mój'
+    puts made_by_ruby == made_by_my_sort
+  end
 end
 
+# sprawdza wszystkie mteody
+def check_all
+  100.times do
+    a = Array.new(1000) { rand }
+    made_by_ruby = a.dup.sort
+    puts sort(a.dup) == made_by_ruby
+    puts sort_new_with_each(a.dup) == made_by_ruby
+    puts sort_new_with_times(a.dup) == made_by_ruby
+    puts sort_new(a.dup) == made_by_ruby
+  end
+end
 
-# dla 100 000 dla wersji z (b..e).each
-# Rehearsal -------------------------------------------------
-# mój sort        0.870000   0.010000   0.880000 (  0.874458)
-# mój nowy sort  22.420000   0.000000  22.420000 ( 22.432675)
-# wbudowany       0.020000   0.000000   0.020000 (  0.019045)
-# --------------------------------------- total: 23.320000sec
+# Benchmark dla wszystkich.
+def benchmark(input_array)
+  Benchmark.bmbm do |x|
+    x.report("mój stary sort") { sort(input_array.dup) }
+    # x.report("mój nowy sort - each") { sort_new_with_each(input_array.dup) }
+    # x.report("mój nowy sort - times") { sort_new_with_times(input_array.dup) }
+    x.report("mój nowy sort - kradziona idea:(") { sort_new(input_array.dup) }
+    x.report("wbudowany") { input_array.dup.sort }
+  end
+end
+
+benchmark(input_array)
 
 
 
-# dla 100 000 elementów z e-b+1.times
-# Rehearsal -------------------------------------------------
-# mój sort        0.810000   0.000000   0.810000 (  0.809866)
-# mój nowy sort  22.950000   0.010000  22.960000 ( 22.975217)
-# wbudowany       0.020000   0.000000   0.020000 (  0.020752)
-# --------------------------------------- total: 23.790000sec
 
-#                     user     system      total        real
-# mój sort        0.810000   0.010000   0.820000 (  0.815747)
-# mój nowy sort   0.170000   0.000000   0.170000 (  0.172187)
-# wbudowany       0.020000   0.000000   0.020000 (  0.019359)
+
+
+
+# a = [1, 8, 7, 6, 5]
+# p sort(a.dup)
+# print "pownna być bazowa #{a}\n"
+# p sort_new_with_each(a.dup)
+# print "pownna być bazowa #{a}\n"
+# p sort_new_with_times(a.dup)
+# print "pownna być bazowa #{a}\n"
+# p sort_new(a.dup)
+# print "pownna być bazowa #{a}\n"
+# p a.dup.sort
+# print "pownna być bazowa #{a}\n"
