@@ -1,4 +1,7 @@
+# rubocop:disable Style/AsciiComments
 require "pry"
+
+
 # Napisz metodę initials , która wypisuje inicjały osoby na podstawie jej pełnego imienia.
 # Wszystkie znaki inicjałów powinny być pisane z dużej litery.
 
@@ -328,7 +331,7 @@ require "pry"
 # ( true / false ) w zależnośći czy dany ciąg jest palindromem.
 
 # def palindrome?(string)
-#   string.downcase.split.join == string.reverse.downcase.split.join #tak chyba i tak krócej niż z gsubem
+#   string.downcase.tr(" ", "") == string.reverse.downcase.tr(" ", "") #tak chyba i tak krócej niż z gsubem
 # end
 #
 # puts palindrome?('Kobyła ma mały bok') #=> true

@@ -34,7 +34,7 @@ class Warehouse
   end
 
   def print(product)
-    puts product[0].ljust(13, ".") + " " + product[1].to_s
+    puts product[0].ljust(13, ".") + " " + product[1].to_s + "zł"
   end
 
   def add(object)
@@ -91,6 +91,7 @@ end
 
 warehouse = Warehouse.new
 CSV.foreach("products.csv", converters: :float, headers: true, return_headers: true) do |r|
+  binding.pry
   warehouse.add(r)
 end
 # binding.pry

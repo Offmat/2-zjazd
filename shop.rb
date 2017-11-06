@@ -1,3 +1,4 @@
+# rubocop made me
 class Product
   attr_accessor :name, :price
   def initialize(name, price)
@@ -6,15 +7,16 @@ class Product
   end
 end
 
-
+# rubocop made me
 class Shop
-  attr_accessor :name, :products
+  attr_reader :name
+  attr_accessor :products
   def initialize(name)
-    self.name = name
+    @name = name
     self.products = []
   end
 
-  def add_product(product, quantity=1)
+  def add_product(product, quantity = 1)
     quantity.times { products << product }
   end
 
@@ -24,7 +26,7 @@ class Shop
   end
 end
 
-
+# rubocop made me
 class Client
   attr_accessor :list
   attr_reader :money, :name, :bag
@@ -37,7 +39,7 @@ class Client
 
   def perform_shopping(shop)
     success = true
-    while product_name = list.pop
+    while (product_name = list.pop)
       product = shop.take(product_name)
       if product.price < @money
         bag << product
@@ -60,8 +62,8 @@ shop.add_product(Product.new('chleb', 1), 10)
 shop.add_product(Product.new('jogurt', 1.23), 4)
 shop.add_product(Product.new('szynka', 5.99), 8)
 janusz = Client.new('Janusz', 30)
-janusz.list = ['chleb', 'jogurt', 'jogurt', 'szynka']
-janusz.please_buy("szynka")
+janusz.list = %w[chleb jogurt jogurt szynka]
+janusz.please_buy('szynka')
 puts janusz.perform_shopping(shop)
 
 puts janusz.inspect
