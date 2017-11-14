@@ -284,9 +284,7 @@ require "pry"
 # Zignoruj wielkość liter.
 
 # def word_count(string)
-#   hash = Hash.new
-#   string.downcase.split.each {|e| hash.key?(e) ? hash[e] += 1 : hash[e] = 1}
-#   hash
+#   string.downcase.split.each_with_object({}) { |str, h| h.key?(str) ? h[str] += 1 : h[str] = 1}
 # end
 #
 # puts word_count('foo Foo bar bar Bar') #=> { "foo" => 2, "bar" => 3 }
@@ -314,8 +312,7 @@ require "pry"
 # tylko z liczbami reprezentującymi rok przestępny.
 
 # def leap_years(years)
-#   years.map! {|y| leap_year?(y) ? y : nil}
-#   years.compact
+#   years.select { |y| leap_year?(y) }
 # end
 #
 # print leap_years([2011, 2012, 2015, 2016, 2018]) #=> [2012, 2016]

@@ -15,7 +15,7 @@
 # sunflower seeds 0.99zł
 # oil 2.22zł
 # cookies 2.20zł
-# flour 1.99zł
+# flour 1.99zł#
 # sugar 2.00zł
 # • umożliwi konwersję cen produktów do innej waluty po zadanym w argumencie
 # wywołania kursie, dane po konwersji zapisze do pliku o zadanej w argumencie
@@ -45,21 +45,9 @@ class Warehouse
     end
   end
 
-  def find(name)
+  def print_products
     @products.each do |product|
-      print(product) if product[0] == name
-    end
-  end
-
-  def greater(price)
-    @products.each do |product|
-      print(product) if product[1] > price
-    end
-  end
-
-  def lesser(price)
-    @products.each do |product|
-      print(product) if product[1] < price
+      print(product) if yield(product)
     end
   end
 
@@ -68,30 +56,31 @@ class Warehouse
     @products.each do |product|
       product[1] = (product[1] / rate).round(2)
     end
-    CSV.open(file_name, "w") do |csv|
+    CSV.open(file_name, 'w') do |csv|
       csv << @headers
       @products.each do |product|
         csv << product
       end
     end
   end
-
 end
-
-
 
 def menu(collection)
-  collection.find(ARGV[1]) if ARGV[0] == "-f"
-  collection.greater(ARGV[1].to_f) if ARGV[0] == "-gt"
-  collection.lesser(ARGV[1].to_f) if ARGV[0] == "-lt"
-  collection.convert(ARGV[1].to_f, ARGV[2], ARGV[3]) if ARGV[0] == "-c"
+  case ARGV[0]
+  when '-f'
+    collection.print_products { |product| ARGV[1] == product[0] }
+  when '-gt'
+    collection.print_products { |product| product[1] > ARGV[1].to_f }
+  when '-lt'
+    collection.print_products { |product| product[1] < ARGV[1].to_f }
+  when '-c'
+    collection.convert(ARGV[1].to_f, ARGV[2], ARGV[3])
+  end
 end
-
-
 
 warehouse = Warehouse.new
 CSV.foreach("products.csv", converters: :float, headers: true, return_headers: true) do |r|
-  binding.pry
+  # binding.pry
   warehouse.add(r)
 end
 # binding.pry
